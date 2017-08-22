@@ -1,0 +1,17 @@
+<#include "/static/common/items_head.html" />
+<@d.listManagerTag page="${_page}" pagesize="${_pagesize}" />
+[
+<#list rows as row>
+	{
+		"managerId":"${row.managerId!}",
+		"managerUsername":"${row.managerUsername!}",
+		"managerPassword":"${row.managerPassword!}",
+		"managerRealname":"${row.managerRealname!}",
+		"managerSex":"${row.managerSex?string("是","否")}",
+		"managerEmail":"${row.managerEmail!}",
+		"managerIp":"${row.managerIp!}",
+		"managerNicaddress":"${row.managerNicaddress!}"
+	}
+	<#if row_has_next>,</#if>
+</#list>
+]

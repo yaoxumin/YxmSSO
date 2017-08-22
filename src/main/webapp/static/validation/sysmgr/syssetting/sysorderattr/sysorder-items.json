@@ -1,0 +1,28 @@
+<#include "/static/common/items_head.html" />
+<@d.listSysorderTag page="${_page}" pagesize="${_pagesize}" />
+[
+<#list rows as row>
+	{
+		"sysorderId":"${row.sysorderId!}",
+		"sysorderIsupload":"${row.sysorderIsupload?string("是","否")}",
+		"sysorderKefumax":"${row.sysorderKefumax!}",
+		"sysorderIsaccept":"${row.sysorderIsaccept?string("是","否")}",
+		"sysorderCreatelimit":"${row.sysorderCreatelimit!}",
+		"sysorderSeizedlimit":"${row.sysorderSeizedlimit!}",
+		"sysorderIswarnkefu":"${row.sysorderIswarnkefu?string("是","否")}",
+		"sysorderIswarnchargeman":"${row.sysorderIswarnchargeman?string("是","否")}",
+		"sysorderIswarnmonitor":"${row.sysorderIswarnmonitor?string("是","否")}",
+		"sysorderIshandlewarnkefu":"${row.sysorderIshandlewarnkefu?string("是","否")}",
+		"sysorderIshandlewarnchargeman":"${row.sysorderIshandlewarnchargeman?string("是","否")}",
+		"sysorderIshandlewarnmonitor":"${row.sysorderIshandlewarnmonitor?string("是","否")}",
+		"sysorderOvertimetip":"${row.sysorderOvertimetip!}",
+		"sysorderIsedit":"${row.sysorderIsedit?string("是","否")}",
+		"sysorderIsexportremarks":"${row.sysorderIsexportremarks?string("是","否")}",
+		"sysorderImportantsign":"${row.sysorderImportantsign?string("是","否")}",
+		"sysorderCreatetime":"${row.sysorderCreatetime!}",
+		"sysorderUpdatetime":"${row.sysorderUpdatetime!}",
+		"sysoperator":"${row.sysoperator!}"
+	}
+	<#if row_has_next>,</#if>
+</#list>
+]

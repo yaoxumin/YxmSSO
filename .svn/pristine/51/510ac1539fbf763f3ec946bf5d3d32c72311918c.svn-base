@@ -1,0 +1,23 @@
+package com.yxm.sso.context;
+
+/**
+ * <p>
+ * 说明:系统的上下文环境
+ * </p>
+ * 
+ * @author:姚旭民
+ * @date:2017-7-10 下午2:22:00
+ */
+public class AppContext {
+	//各种类型的key的值
+	public final static String KEY_TOKEN = "token";
+	public final static String KEY_TOKEN_BACKURL = "backUrl";//请求重定向的地址
+	public final static String KEY_SESSION_USER = "user";//保存在session里面的key
+	public final static String KEY_SPILT_DEFAULT = ",";
+	public final static String KEY_TOKEN_MAP_ID = "id";
+	public final static String KEY_TOKEN_MAP_NAME = "name";
+	public final static String KEY_TOKEN_MAP_TYPE = "type";
+	public final static String KEY_TOKEN_MAP_UUID = "uuid";
+	public final static String TABLE_APPLICAITON = "application";
+	public final static String KEY_REDIS_APPLICATION_KEY = TABLE_APPLICAITON;
+}

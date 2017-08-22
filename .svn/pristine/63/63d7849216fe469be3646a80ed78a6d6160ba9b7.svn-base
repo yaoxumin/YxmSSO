@@ -1,0 +1,152 @@
+package com.yxm.sso.util;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
+import com.xiaoleilu.hutool.lang.Base64;
+import com.xiaoleilu.hutool.util.StrUtil;
+import com.yxm.sso.api.RedisApi;
+import com.yxm.sso.context.AppContext;
+
+/**
+ * <p>
+ * 说明:用来管理token的相关事物的类型
+ * </p>
+ * 
+ * @author:姚旭民
+ * @date:2017-7-10 下午2:25:05
+ */
+public class TokenUtils {
+	private static final Logger logger = LogManager.getLogger(TokenUtils.class);
+
+	/**
+	 * <p>
+	 * 说明:返回加密的token
+	 * </p>
+	 * 
+	 * @author:姚旭民
+	 * @date:2017-7-10 下午2:27:16
+	 */
+	public static String encodeToken(int userId, String username, String type) {
+		String result = null;
+		try {
+			// 【1】生产token,组成为，id，名字，类型，UUID
+			result = UUID.randomUUID().toString();
+			StringBuilder str = new StringBuilder();
+			result = str.append(userId).append(AppContext.KEY_SPILT_DEFAULT)
+					.append(username).append(AppContext.KEY_SPILT_DEFAULT)
+					.append(type).append(result).toString();
+			result = Base64.encode(result);
+		} catch (Exception e) {
+			System.out.println("TokenUtils的getToken出错");
+			logger.info("TokenUtils的getToken出错");
+		}
+		return result;
+	}
+
+	/*
+	 * <p>说明:tooken解密变成字符串</p>
+	 * 
+	 * @author:姚旭民
+	 * 
+	 * @data:2017-8-6 下午2:39:37
+	 */
+	public static String decodeOfString(String str) {
+		String result = null;
+		if (StrUtil.isNotBlank(str)) {
+			result = Base64.decodeStr(str);
+		}
+		return result;
+	}
+
+	/*
+	 * <p>说明:解密变成Map</p>
+	 * 
+	 * @author:姚旭民
+	 * 
+	 * @data:2017-8-6 下午10:38:49
+	 */
+	public static Map decodeOfMap(String str) {
+		Map<String, String> result = new HashMap<String, String>();
+		String temp = decodeOfString(str);
+		result.put(AppContext.KEY_TOKEN_MAP_ID,
+				temp.split(AppContext.KEY_SPILT_DEFAULT)[0]);
+		result.put(AppContext.KEY_TOKEN_MAP_NAME,
+				temp.split(AppContext.KEY_SPILT_DEFAULT)[1]);
+		result.put(AppContext.KEY_TOKEN_MAP_TYPE,
+				temp.split(AppContext.KEY_SPILT_DEFAULT)[2]);
+		result.put(AppContext.KEY_TOKEN_MAP_UUID,
+				temp.split(AppContext.KEY_SPILT_DEFAULT)[3]);
+		return result;
+	}
+
+	/**
+	 * <p>
+	 * 说明:删除某个 token键值，执行成功返回true，失败是false
+	 * </p>
+	 * 
+	 * @author:姚旭民
+	 * @date:2017-7-15 下午2:46:35
+	 */
+	public static boolean delToken(String token) {
+		boolean flag = false;
+		// 【1】检查token是否为null
+		// if (!StringUtils.isNotBlank(token)) {
+		// // 【2】检查一下token是否是存在redis，如果不存在，接下来的操作都不必进行
+		// if (TokenUtils.exitsToken(token)) {
+		// String sessionId = getSessionId(token);
+		// long status = RedisApi.delObjectData(
+		// AppContext.KEY_REDIS_TOKEN_TABLE, token);
+		// GlobalSessions.delSession(sessionId);
+		// flag = status == 1 ? true : false;
+		// }
+		// }
+		return flag;
+	}
+
+	/*
+	 * <p>Description:检验redis里面是否存在了 这个token</p>
+	 * 
+	 * @author:姚旭民
+	 * 
+	 * @data:2017-7-20 下午4:03:05
+	 */
+	public static boolean exitsToken(String token) {
+		boolean result = false;
+		if (StringUtils.isNotBlank(token)) {
+			String decodeToken = decodeOfString(token);//获取token的解密的值
+			if (StrUtil.isNotBlank(decodeToken)) {
+				String[] tempStr = decodeToken.split(AppContext.KEY_SPILT_DEFAULT);//切割
+				String redisKey = tempStr[2]+tempStr[0];//组成了redis钥匙
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * <p>
+	 * 说明:验证token是否存在
+	 * </p>
+	 * 
+	 * @author:姚旭民
+	 * @param:token的值，String类型
+	 * @return:存在token返回true，其余情况返回false
+	 * @date:2017-7-15 下午2:54:11
+	 */
+	public static boolean verifyToken(String token, String sessionId) {
+		boolean flag = false;
+		// if (StringUtils.isNotBlank(token, sessionId)) {
+		// flag = RedisApi.exitsToken(AppContext.KEY_REDIS_TOKEN_TABLE, token,
+		// sessionId);
+		// }
+		return flag;
+	}
+
+	public static void main(String[] args) {
+		System.out.println(UUID.randomUUID().toString());
+	}
+}

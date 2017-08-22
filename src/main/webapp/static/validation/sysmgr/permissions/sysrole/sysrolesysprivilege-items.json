@@ -1,0 +1,10 @@
+<#include "/static/common/items_head.html" />
+<@d.listSysroleSysprivilegeTag page="${_page}" pagesize="${_pagesize}" />
+[
+<#list rows as row>
+	{
+		"sysroleprivId":"${row.sysroleprivId!}"
+	}
+	<#if row_has_next>,</#if>
+</#list>
+]

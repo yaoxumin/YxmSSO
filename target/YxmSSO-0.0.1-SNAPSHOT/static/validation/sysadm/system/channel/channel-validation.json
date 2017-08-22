@@ -1,0 +1,22 @@
+{
+    "code": 200,
+    "msg": "处理成功",
+    "data": {
+    	"channelWebname": [
+            {
+                "type" : "requiredstring",
+                "message" : "网站名称不能为空"
+            }
+        ],
+        "channelUrl": [
+            {
+                "type" : "requiredstring",
+                "message" : "网站链接不能为空"
+            },
+            {
+                "type" : "url",
+                "message" : "请输入合法的网址 "
+            }
+        ]
+    }
+}

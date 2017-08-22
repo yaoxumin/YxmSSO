@@ -1,0 +1,16 @@
+<#include "/static/common/items_head.html" />
+<@d.listTouristTag page="${_page}" pagesize="${_pagesize}" />
+[
+<#list rows as row>
+	{
+		"touristId":"${row.touristId!}",
+		"touristName":"${row.touristName!}",
+		"touristIp":"${row.touristIp!}",
+		"touristCompanyid":"${row.touristCompanyid!}",
+		"touristNicaddress":"${row.touristNicaddress!}",
+		"touristCreatetime":"${row.touristCreatetime!}",
+		"touristFrom":"${row.touristFrom!}"
+	}
+	<#if row_has_next>,</#if>
+</#list>
+]

@@ -1,0 +1,26 @@
+<#include "/static/common/items_head.html" />
+<@d.listSyssettingTag page="${_page}" pagesize="${_pagesize}" />
+[
+<#list rows as row>
+	{
+		"syssettingId":"${row.syssettingId!}",
+		"syssettingReceive":"${row.syssettingReceive?string("是","否")}",
+		"syssettingIstransfer":"${row.syssettingIstransfer?string("是","否")}",
+		"syssettingIsavatar":"${row.syssettingIsavatar?string("是","否")}",
+		"syssettingIsfile":"${row.syssettingIsfile?string("是","否")}",
+		"syssettingIsprintscreen":"${row.syssettingIsprintscreen?string("是","否")}",
+		"syssettingIsemotion":"${row.syssettingIsemotion?string("是","否")}",
+		"syssettingIsvoice":"${row.syssettingIsvoice?string("是","否")}",
+		"syssettingIsmessage":"${row.syssettingIsmessage?string("是","否")}",
+		"syssettingIssensitive":"${row.syssettingIssensitive?string("是","否")}",
+		"syssettingSessionidletime":"${row.syssettingSessionidletime!}",
+		"syssettingOvertimetip":"${row.syssettingOvertimetip!}",
+		"syssettingInvitationmsg":"${row.syssettingInvitationmsg!}",
+		"syssettingThanksmsg":"${row.syssettingThanksmsg!}",
+		"syssettingIspopup":"${row.syssettingIspopup?string("是","否")}",
+		"syssettingUpdatetime":"${row.syssettingUpdatetime!}",
+		"sysoperator":"${row.sysoperator!}"
+	}
+	<#if row_has_next>,</#if>
+</#list>
+]

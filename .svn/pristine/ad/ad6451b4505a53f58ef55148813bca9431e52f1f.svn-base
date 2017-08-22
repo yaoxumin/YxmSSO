@@ -1,0 +1,66 @@
+package com.yxm.sso.domain.vo;
+
+import java.io.Serializable;
+
+import com.yxm.sso.domain.Application;
+import com.yxm.sso.domain.Person;
+
+public class UserVo implements Serializable {
+	private String token;// 当前账号拥有的token
+	private Person person;// token包含的用户信息
+	private Application app;// 用户所在的系统的信息
+	private String backUrl;//用户的回调地址
+
+	public UserVo() {
+	}
+	
+	public UserVo(String token, String backUrl, Person person) {
+		this.token = token;
+		this.backUrl = backUrl;
+		this.person = person;
+	}
+	
+	public UserVo(String token, String backUrl, Person person, Application app) {
+		this.token = token;
+		this.backUrl = backUrl;
+		this.person = person;
+		this.app = app;
+	}
+	
+	public UserVo(String token, Person person) {
+		this.token = token;
+		this.person = person;
+	}
+
+	public Application getApp() {
+		return app;
+	}
+
+	public void setApp(Application app) {
+		this.app = app;
+	}
+
+	public String getBackUrl() {
+		return backUrl;
+	}
+
+	public void setBackUrl(String backUrl) {
+		this.backUrl = backUrl;
+	}
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
+	}
+
+	public Person getPerson() {
+		return person;
+	}
+
+	public void setPerson(Person person) {
+		this.person = person;
+	}
+}

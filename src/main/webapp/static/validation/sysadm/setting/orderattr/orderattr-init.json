@@ -1,0 +1,13 @@
+{
+    "orderIsupload": "0",
+    "orderIsaccept": "1",
+    "orderIswarnkefu": "0",
+    "orderIswarnchargeman": "1",
+    "orderIswarnmonitor": "0",
+    "orderIshandlewarnkefu": "1",
+    "orderIshandlewarnchargeman": "0",
+    "orderIshandlewarnmonitor": "1",
+    "orderIsedit": "1",
+    "orderIsexportremarks": "0",
+    "orderImportantsign": "0"
+}

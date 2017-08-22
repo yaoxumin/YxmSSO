@@ -1,0 +1,78 @@
+{
+    "code": 200,
+    "msg": "处理成功",
+    "data": {
+        "sysgreetingWorktip" :[
+            {
+                "type": "requiredstring",
+                "trim": true,
+                "message" : "上班提示语不能为空"
+            }
+        ],
+        "sysgreetingOffworktip" :[
+            {
+                "type": "requiredstring",
+                "trim": true,
+                "message" : "下班提示语不能为空"
+            }
+        ],
+        "sysgreetingCallendtip" :[
+            {
+                "type": "requiredstring",
+                "trim": true,
+                "message" : "通话结束语不能为空"
+            }
+        ],
+        "sysgreetingOfflinetip" :[
+            {
+                "type": "requiredstring",
+                "trim": true,
+                "message" : "客服离线提示语不能为空"
+            }
+        ],
+        "sysgreetingTransfertip" :[
+            {
+                "type": "requiredstring",
+                "trim": true,
+                "message" : "转接提示语不能为空"
+            }
+        ],
+        "sysgreetingCallbacktip" :[
+            {
+                "type": "requiredstring",
+                "trim": true,
+                "message" : "回呼欢迎语不能为空"
+            }
+        ],
+        "sysgreetingIswork" :[
+            {
+                "type" : "required",
+                "message" : "请设置网页访客上班提示语开关设置"
+            }
+        ],
+        "sysgreetingIsknockoff" :[
+            {
+                "type" : "required",
+                "message" : "请设置网页访客下班提示语开关设置"
+            }
+        ],
+        "sysgreetingIscallend" :[
+            {
+                "type" : "required",
+                "message" : "请设置网页访客通话结束语开关设置"
+            }
+        ],
+        "sysgreetingIsoffline" :[
+            {
+                "type" : "required",
+                "message" : "请设置网页访客客服离线提示语开关设置"
+            }
+        ],
+        "sysgreetingIscallback" :[
+            {
+                "type" : "required",
+                "message" : "请设置网页访客回呼欢迎语开关设置"
+            }
+        ]
+    }
+}

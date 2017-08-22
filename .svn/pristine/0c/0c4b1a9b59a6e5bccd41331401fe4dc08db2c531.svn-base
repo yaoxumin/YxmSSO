@@ -1,0 +1,182 @@
+package com.yxm.sso.util.service;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import com.alibaba.fastjson.JSON;
+import com.xiaoleilu.hutool.lang.Base64;
+import com.xiaoleilu.hutool.util.ObjectUtil;
+import com.xiaoleilu.hutool.util.StrUtil;
+import com.yxm.sso.context.AppContext;
+import com.yxm.sso.domain.Person;
+import com.yxm.sso.domain.vo.PersonVo;
+import com.yxm.sso.service.impl.ApplicationServiceImpl;
+import com.yxm.sso.util.StringUtils;
+import com.yxm.sso.util.result.ApiResult;
+
+/**
+ * <p>
+ * 说明:跨域请求处理业务类
+ * </p>
+ * 
+ * @author:姚旭民
+ * @date:2017-7-11 上午10:14:14
+ */
+public class TokenServiceImpl {
+	static Log logger = LogFactory.getLog(TokenServiceImpl.class);
+
+	/**
+	 * <p>
+	 * 说明:返回加密的token,并且把token写进去redis
+	 * </p>
+	 * 
+	 * @author:姚旭民
+	 * @date:2017-7-10 下午2:27:16
+	 */
+	public static String encodeAndSaveToken(int userId, String name, String type,
+			Person person) {
+		String result = null;
+		try {
+			// 【1】生产token,组成为，id，名字，类型，UUID
+			result = UUID.randomUUID().toString();
+			StringBuilder str = new StringBuilder();
+			result = str.append(userId).append(AppContext.KEY_SPILT_DEFAULT)
+					.append(name).append(AppContext.KEY_SPILT_DEFAULT)
+					.append(type).append(result).toString();
+			result = Base64.encode(result);
+			// 将数据保存到redis里面
+			RedisServiceImpl.saveMapCache(person, userId + "");
+		} catch (Exception e) {
+			System.out.println("TokenUtils的getToken出错");
+			logger.info("TokenUtils的getToken出错");
+		}
+		return result;
+	}
+
+	/*
+	 * <p>说明:tooken解密变成字符串</p>
+	 * 
+	 * @author:姚旭民
+	 * 
+	 * @data:2017-8-6 下午2:39:37
+	 */
+	public static String decodeOfToken(String token) {
+		String result = null;
+		if (StrUtil.isNotBlank(token)) {
+			result = Base64.decodeStr(token);
+		}
+		return result;
+	}
+
+	/*
+	 * <p>说明:解密变成Map</p>
+	 * 
+	 * @author:姚旭民
+	 * 
+	 * @data:2017-8-6 下午10:38:49
+	 */
+	public static Map decodeOfMap(String token) {
+		Map<String, String> result = new HashMap<String, String>();
+		String temp = decodeOfToken(token);
+		result.put(AppContext.KEY_TOKEN_MAP_ID,
+				temp.split(AppContext.KEY_SPILT_DEFAULT)[0]);
+		result.put(AppContext.KEY_TOKEN_MAP_NAME,
+				temp.split(AppContext.KEY_SPILT_DEFAULT)[1]);
+		result.put(AppContext.KEY_TOKEN_MAP_TYPE,
+				temp.split(AppContext.KEY_SPILT_DEFAULT)[2]);
+		result.put(AppContext.KEY_TOKEN_MAP_UUID,
+				temp.split(AppContext.KEY_SPILT_DEFAULT)[3]);
+		return result;
+	}
+	
+	/*
+	 *<p>说明:删除redis里面缓存的token</p>
+	 *@author:姚旭民
+	 *@data:2017-8-9 下午5:50:28
+	 */
+	public static boolean delToken(HttpServletRequest request, String token) {
+		//【1】查看是否是有授权网站进行的删除redis数据
+		if (StringUtils.isNotBlank(token) && ApplicationServiceImpl.allowedApplication(request)) {
+			//【2】删除token信息
+			return RedisServiceImpl.delMapCache(getRedisKey(token));
+		}
+		return false;
+	}
+
+	/*
+	 * <p>说明:分解组成token保存在Redis里面的key</p>
+	 * 
+	 * @author:姚旭民
+	 * 
+	 * @data:2017-8-8 下午11:36:20
+	 */
+	public static String getRedisKey(String token) {
+		String result = null;
+		if (StringUtils.isNotBlank(token)) {
+			result = decodeOfToken(token);// 解密token
+			if (StringUtils.isNotBlank(result)) {
+				result = result.split(AppContext.KEY_SPILT_DEFAULT)[0]
+						+ result.split(AppContext.KEY_SPILT_DEFAULT)[2];
+			}
+		}
+		return result;
+	}
+
+
+	/*
+	 * <p>说明:通过token获取用户信息</p>
+	 * 
+	 * @author:姚旭民
+	 * 
+	 * @data:2017-8-6 下午4:07:41
+	 */
+	public static ApiResult getUserInfo(HttpServletRequest request, String token) {
+		ApiResult result = new ApiResult();
+		result.setCode(-1);
+		result.setMsg("无效的token");
+		// 【1】检查是否是存在的token，同时检查这个域名是否是客户域名
+		if (StringUtils.isNotBlank(token)
+				&& ApplicationServiceImpl.allowedApplication(request)) {
+			try {
+				String key = getRedisKey(token);
+				Map<String, String> map = RedisServiceImpl.getMapData(key);
+				// 【2】、域名检测合法，查找token是否存在数据
+				if (ObjectUtil.isNotNull(map)) {// 如果在redis里面找到了数据
+					result.setCode(200);
+					result.setMsg("获取信息成功");
+					PersonVo person = PersonVo.fromJson(JSON.toJSONString(map));// 转化成对象
+					result.setData(person);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return result;
+	}
+	
+	/*
+	 * <p>说明:验证token是否存在</p>
+	 * 
+	 * @author:姚旭民
+	 * 
+	 * @data:2017-8-7 上午9:23:34
+	 */
+	public static boolean verifyToken(HttpServletRequest request, String token) {
+		// 【1】首先判断这个请求过来的ip是不是被允许的客户端域名
+		if (StringUtils.isNotBlank(token)
+				&& ApplicationServiceImpl.allowedApplication(request)) {
+			// 【2】验证这个token是否存在
+			String key = getRedisKey(token);
+			if (StringUtils.isNotBlank(key)) {
+				return RedisServiceImpl.exitMap(key);
+			}
+		}
+		return false;
+	}
+}

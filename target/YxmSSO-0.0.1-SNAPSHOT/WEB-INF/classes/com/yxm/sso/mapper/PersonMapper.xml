@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper    
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"    
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yxm.sso.mapper.PersonMapper">
+	
+	<select id="listAll" resultType="com.yxm.sso.domain.Person">
+		select * from person
+	</select>
+	
+	<insert id="addRecord"  parameterType="com.yxm.sso.domain.Person">
+	 	insert into person(username,age,gender) values(#{username,jdbcType=VARCHAR},#{age,jdbcType=VARCHAR},#{gender,jdbcType=VARCHAR});
+	</insert>
+	
+	<insert id="saveOrUpdate" parameterType="com.yxm.sso.domain.Person">
+		 insert into person(id,username,age,gender) values(#{id,jdbcType=CHAR},#{username,jdbcType=VARCHAR},#{age,jdbcType=VARCHAR},date_format(Now(),'%Y%m%d%H%i%s'))
+		 ON DUPLICATE KEY UPDATE 
+	     username=#{username,jdbcType=CHAR},age=#{age,jdbcType=CHAR},gender=date_format(Now(),'%Y%m%d%H%i%s');
+	</insert>
+	
+	<select id='getDetail' resultType='com.yxm.sso.domain.Person' parameterType="java.lang.String">
+		select userName,age,gender from person where id=#{id,jdbcType=VARCHAR};
+	</select>
+	
+	<select id="getPerson" resultType='com.yxm.sso.domain.Person' parameterType="com.yxm.sso.domain.Person">
+		SELECT * 
+		FROM person p
+		<where>
+			<if test="username != null">
+				p.username = #{username}
+			</if>
+			<if test="age != null" >
+		        AND p.age = #{age}
+		    </if>
+		</where>
+	</select>
+	
+	<select id="verifyPerson" resultType='com.yxm.sso.domain.Person' parameterType="com.yxm.sso.domain.Person">
+		SELECT * 
+		FROM person p
+		<where>
+			<if test="username != null">
+				p.username = #{username}
+			</if>
+		</where>
+	</select>
+	
+	<delete id="deleteRecord" parameterType="java.lang.String">
+		DELETE FROM person where id = #{id} 
+	</delete>
+</mapper>

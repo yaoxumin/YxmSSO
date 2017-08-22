@@ -1,0 +1,13 @@
+{
+    "sysorderIsupload": "1",
+    "sysorderIsaccept": "1",
+    "sysorderIswarnkefu": "0",
+    "sysorderIswarnchargeman": "1",
+    "sysorderIswarnmonitor": "0",
+    "sysorderIshandlewarnkefu": "0",
+    "sysorderIshandlewarnchargeman": "1",
+    "sysorderIshandlewarnmonitor": "0",
+    "sysorderIsedit": "0",
+    "sysorderIsexportremarks": "1",
+    "sysorderImportantsign": "0"
+}

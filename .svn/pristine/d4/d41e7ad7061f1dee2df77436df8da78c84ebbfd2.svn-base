@@ -1,0 +1,65 @@
+{
+    "code": 200,
+    "msg": "处理成功",
+    "data": {
+        "personPwd": [
+            {
+                "type" : "requiredstring",
+                "message" : "密码不能为空"
+            },
+            {
+                "type" : "stringlength",
+                "minLength" : "6",
+                "maxLength" : "20",
+                "trim" : true,
+                "message" : "请输入7-20位密码"
+            },
+            {
+                "type" : "regex",
+                "expression" : "^[a-zA-Z0-9_\\s]+$",
+                "message" : "请输入6-20位密码，可由数字、字母、字符组成"
+            }
+        ],
+        "personNewPwd": [
+            {
+                "type" : "requiredstring",
+                "message" : "新密码不能为空"
+            },
+            {
+                "type" : "stringlength",
+                "minLength" : "6",
+                "maxLength" : "20",
+                "trim" : true,
+                "message" : "请输入6-20位密码"
+            },
+            {
+                "type" : "regex",
+                "expression" : "^[a-zA-Z0-9_\\s]+$",
+                "message" : "请输入6-20位密码，可由数字、字母、字符组成"
+            }
+        ],
+        "personRepwd": [
+            {
+                "type" : "requiredstring",
+                "message" : "确认密码不能为空"
+            },
+            {
+                "type" : "stringlength",
+                "minLength" : "6",
+                "maxLength" : "20",
+                "trim" : true,
+                "message" : "请输入6-20位密码"
+            },
+            {
+                "type" : "regex",
+                "expression" : "^[a-zA-Z0-9_\\s]+$",
+                "message" : "请输入6-20位密码，可由数字、字母、字符组成"
+            },
+            {
+                "type" : "fieldexpression",
+                "expression" : "{personNewPwd} == {personRepwd}",
+                "message" : "两次输入的密码不一致"
+            }
+        ]
+    }
+}

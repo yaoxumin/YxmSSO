@@ -1,0 +1,102 @@
+package com.yxm.sso.web.controller;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import com.yxm.sso.base.controller.BaseController;
+import com.yxm.sso.domain.Person;
+import com.yxm.sso.service.impl.PersonServiceImpl;
+
+
+@Controller
+@RequestMapping("/person")
+public class PersonController extends BaseController<Person> {
+	Log logger= LogFactory.getLog(PersonController.class);
+	
+	@Resource
+	PersonServiceImpl personService;
+	
+	/**
+	 * 查询全部
+	 * @param model
+	 * @return
+	 */
+	@SuppressWarnings("rawtypes")
+	@RequestMapping("/listAll")
+	public  String listAll(HttpSession session, Model model){
+		logger.debug("123");
+//		List personList = personService.listAll();
+		List personList = personService.findListBySql("select * from person");
+		model.addAttribute("personList", personList);
+		return "/person/jPersonList";
+	}
+	/**
+	 * 添加记录
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("/addRecord")
+	public  String addRecord(HttpSession session, Model model){
+		logger.debug("1233");
+		Person p=new Person();
+		p.setSex("男");
+		p.setUsername("测试");
+		p.setAge(222);
+		int re = personService.addRecord(p);//操作返回码
+//		System.out.println(re);
+		model.addAttribute("message", "you can you up!");
+		
+		return "/person/addResult";
+	}
+	
+	/**
+	 * 添加或更新
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("/saveOrUpdate")
+	public  String saveOrUpdate(Model model){
+		logger.debug("1233");
+		Person p=new Person();
+		p.setId(9090);
+		p.setSex("测试1");
+		p.setUsername("测试1");
+		p.setAge(222);
+		int re = personService.saveOrUpdate(p);
+		System.out.println(re);
+		model.addAttribute("message", "you can you up!");
+		
+		return "/person/saveOrUpdte";
+	}
+	
+	/**
+	 * 查看个人信息详情
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping(value="/getDetail")
+	public String details(Model model,@RequestParam("id") String id){
+		Person person=personService.getDetail(id);
+		model.addAttribute("person",person);
+		return "/person/personDetail";
+	}
+	
+	@RequestMapping("deleteRecord")
+	public String deleteRecord(Model model,@RequestParam("id") String id) {
+		personService.deleteRecord(id);
+		List personList = personService.listAll();
+		model.addAttribute("personList", personList);
+		return "/person/jPersonList";
+	}
+	
+	
+}

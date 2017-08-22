@@ -1,0 +1,30 @@
+{
+	"email" : [
+		{
+            "type": "requiredstring",
+            "message" : "邮箱不能为空"
+        },
+        {
+            "type" : "regex",
+            "expression" : "^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\\.[a-zA-Z0-9_-]{2,3}){1,2})$",
+            "message" : "请输入合法的邮箱"
+        }        
+	],
+	"password" : [
+		{
+			"type" : "requiredstring",
+			"message" : "密码不能为空"
+		},
+		{
+			"type" : "regex",
+			"expression" : "^[a-zA-Z0-9_\\s]+$",
+			"message" : "请输入有效密码,密码由字母和数字组成"
+		}
+	],
+	"vericode" : [
+		{
+			"type" : "required",
+			"message" : "验证码不能为空"
+		}
+	]
+}

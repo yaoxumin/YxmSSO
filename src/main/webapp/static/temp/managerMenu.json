@@ -1,0 +1,39 @@
+[
+	{"id":1,"name":"坐席管理","url":"/#","icon":"menu-icon fa fa-home","children":[
+		{"id":2,"name":"技能组管理","url":"/sysskill-manage","icon":""},
+	    {"id":3,"name":"人工坐席","url":"/syskefu-manage","icon":""}
+	]},
+	{"id":4,"name":"系统管理","url":"/#","icon":"menu-icon fa fa-tasks","children":[
+		{"id":5,"name":"渠道设置","url":"/syschannel-manage","icon":""},
+		{"id":6,"name":"网站基本配置","url":"/sysconfig-manage","icon":""}
+	]},
+	{"id":7,"name":"工单查询","url":"/sysorder-manage","icon":"menu-icon fa fa-desktop"},
+	{"id":8,"name":"导航管理","url":"/#","icon":"menu-icon fa fa-th","children":[
+		{"id":9,"name":"栏目","url":"/syscolumn-manage","icon":""},
+		{"id":10,"name":"细粒度","url":"/sysprivilege-manage","icon":""}
+	]},
+	{"id":11,"name":"权限管理","url":"/#","icon":"menu-icon fa fa-th","children":[
+		{"id":12,"name":"用户管理","url":"/manager-manage","icon":""},
+		{"id":13,"name":"角色管理","url":"/sysrole-manage","icon":""}
+	]},
+	{"id":14,"name":"基础智库管理","url":"/#","icon":"menu-icon fa fa-th","children":[
+		{"id":15,"name":"快捷回复","url":"/fastreply-manage","icon":""},
+		{"id":16,"name":"机器人回复","url":"/robot-manage","icon":""}
+	]},
+	{"id":17,"name":"基本信息","url":"/#","icon":"menu-icon fa fa-desktop","children":[
+		{"id":18,"name":"企业信息","url":"/syscompany-view","icon":""},
+	    {"id":19,"name":"部门信息","url":"/syssection-manage","icon":""},
+	    {"id":20,"name":"员工信息","url":"/sysstaff-manage","icon":""},
+	    {"id":21,"name":"公司信息列表","url":"/company-manage","icon":""}
+	]},
+	{"id":22,"name":"游客列表","url":"/tourist-view","icon":"menu-icon fa fa-desktop"},       
+	{"id":23,"name":"设置中心","url":"/#","icon":"menu-icon fa fa-calendar","children":[
+		{"id":24,"name":"基本设置","url":"/syssetting-modify","icon":""},
+	    {"id":25,"name":"欢迎语设置","url":"/sysgreeting-modify","icon":""},
+	    {"id":26,"name":"服务时间管理","url":"/syskefutime-manage","icon":""},
+	    {"id":27,"name":"工单属性管理","url":"/sysorderattr-modify","icon":""}
+	]},
+	{"id":28,"name":"个人管理","url":"/#","icon":"menu-icon fa fa-th","children":[
+		{"id":29,"name":"个人管理","url":"/sysperson-modify","icon":""}
+	]}
+]

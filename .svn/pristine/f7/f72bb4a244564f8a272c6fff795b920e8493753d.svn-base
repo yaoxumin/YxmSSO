@@ -1,0 +1,17 @@
+<#include "/static/common/items_head.html" />
+<@d.listSyschannelTag page="${_page}" pagesize="${_pagesize}" />
+[
+<#list rows as row>
+	{
+		"syschannelId":"${row.syschannelId!}",
+		"syschannelNumber":"${row.syschannelNumber!}",
+		"syschannelWebname":"${row.syschannelWebname!}",
+		"syschannelUrl":"${row.syschannelUrl!}",
+		"syschannelCreatetime":"${row.syschannelCreatetime!}",
+		"syschannelUpdatetime":"${row.syschannelUpdatetime!}",
+		"sysoperator":"${row.sysoperator!}",
+		"sysconfig":"${row.sysconfig!}"
+	}
+	<#if row_has_next>,</#if>
+</#list>
+]

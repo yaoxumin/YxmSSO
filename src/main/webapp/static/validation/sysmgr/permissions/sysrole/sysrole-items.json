@@ -1,0 +1,12 @@
+<#include "/static/common/items_head.html" />
+<@d.listSysroleTag page="${_page}" pagesize="${_pagesize}" />
+[
+<#list rows as row>
+	{
+		"sysroleId":"${row.sysroleId!}",
+		"sysroleName":"${row.sysroleName!}",
+		"sysroleDescription":"${row.sysroleDescription!}"
+	}
+	<#if row_has_next>,</#if>
+</#list>
+]

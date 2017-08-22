@@ -1,0 +1,114 @@
+{
+	"code": 200,
+    "msg": "处理成功",
+    "data": {
+		"sysorderKefumax": [
+			{
+				"type" : "required",
+				"message" : "客服接单上限不能为空"
+			},
+			{
+	            "type" : "int",
+	            "min": 1,
+	            "max": 5,
+	            "message" : "请输入1-5位整数"
+	        }
+		],
+		"sysorderCreatelimit": [
+			{
+				"type" : "required",
+				"message" : "工单创建时间上限不能为空"
+			},
+			{
+				"type" : "int",
+				"min" : 5,
+				"max" : 8,
+				"message" : "单位为小时,请输入5-8个小时内的整数"
+			}
+		],
+		"sysorderSeizedlimit" : [
+			{
+				"type" : "required",
+				"message" : "客服受理工单时间上限不能为空"
+			},
+			{
+				"type" : "int",
+				"min" : 5,
+				"max" : 8,
+				"message" : "单位为小时,请输入5-8个小时内的整数"
+			}
+		],
+		"sysorderOvertimetip": [
+			{
+				"type" : "required",
+				"message" : "超时提示语不能为空"
+			}
+		],
+		"sysorderIsupload": [
+			{
+				"type" : "required",
+				"message" : "请选择是否开启用户上传附件"
+			}
+		],
+		"sysorderIsaccept": [
+			{
+				"type" : "required",
+				"message" : "请选择是否开启离线客服参与系统派单"
+			}
+		],
+		"sysorderIswarnkefu": [
+			{
+				"type" : "required",
+				"message" : "请选择工单超时是否提醒客服"
+			}
+		],
+		"sysorderIswarnchargeman": [
+			{
+				"type" : "required",
+				"message" : "请选择工单超时是否提醒组长"
+			}
+		],
+		"sysorderIswarnmonitor": [
+			{
+				"type" : "required",
+				"message" : "请选择工单超时是否提醒班长"
+			}
+		],
+		"sysorderIshandlewarnkefu": [
+			{
+				"type" : "required",
+				"message" : "请选择处理超时是否提醒客服"
+			}
+		],
+		"sysorderIshandlewarnchargeman": [
+			{
+				"type" : "required",
+				"message" : "请选择处理超时是否提醒组长"
+			}
+		],
+		"sysorderIshandlewarnmonitor": [
+			{
+				"type" : "required",
+				"message" : "请选择处理超时是否提醒班长（早晚班班长)"
+			}
+		],
+		"sysorderIsedit": [
+			{
+				"type" : "required",
+				"message" : "请选择工单关闭后是否允许编辑"
+			}
+		],
+		"sysorderIsexportremarks": [
+			{
+				"type" : "required",
+				"message" : "请选择批量导出工单时，是否导出工单备注"
+			}
+		],
+		"sysorderImportantsign": [
+			{
+				"type" : "required",
+				"message" : "请选择重要工单是否标记"
+			}
+		]
+	}
+}

@@ -1,0 +1,83 @@
+package com.yxm.sso.domain.vo;
+
+import java.util.Date;
+
+import com.alibaba.fastjson.JSON;
+import com.yxm.sso.domain.Application;
+import com.yxm.sso.domain.Person;
+
+/*
+ *<p>说明:打包进入redis的token的包装集合</p>
+ *@author:姚旭民
+ *@data:2017-8-10 上午10:04:31
+ */
+public class TokenVo extends PersonVo {
+	private String url;
+
+	private String appcode;
+
+	private String loginouturl;
+
+	private String accepttokenurl;
+
+	private Integer companyid;
+
+	public TokenVo() {
+	}
+
+	public TokenVo(Person person, Application app) {
+		super.setAge(person.getAge()); 
+		super.setUsername(person.getUsername());
+		super.setSex(person.getSex());
+		super.setApplicationid(person.getApplicationid());
+		this.url = app.getUrl();
+		this.appcode = app.getAppcode();
+		this.loginouturl = app.getLoginouturl();
+		this.accepttokenurl = app.getAccepttokenurl();
+		this.companyid = app.getCompanyid();
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	public String getAppcode() {
+		return appcode;
+	}
+
+	public void setAppcode(String appcode) {
+		this.appcode = appcode;
+	}
+
+	public String getLoginouturl() {
+		return loginouturl;
+	}
+
+	public void setLoginouturl(String loginouturl) {
+		this.loginouturl = loginouturl;
+	}
+
+	public String getAccepttokenurl() {
+		return accepttokenurl;
+	}
+
+	public void setAccepttokenurl(String accepttokenurl) {
+		this.accepttokenurl = accepttokenurl;
+	}
+
+	public Integer getCompanyid() {
+		return companyid;
+	}
+
+	public void setCompanyid(Integer companyid) {
+		this.companyid = companyid;
+	}
+	
+	public static TokenVo fromJson(String json) {
+		return JSON.parseObject(json, TokenVo.class);
+	}
+}

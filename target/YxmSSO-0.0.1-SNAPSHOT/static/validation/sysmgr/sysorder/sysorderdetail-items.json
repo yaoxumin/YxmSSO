@@ -1,0 +1,18 @@
+<#include "/static/common/items_head.html" />
+<@d.listSysorderdetailTag page="${_page}" pagesize="${_pagesize}" />
+[
+<#list rows as row>
+	{
+		"sysorderdetailId":"${row.sysorderdetailId!}",
+		"sysorderdetailNo":"${row.sysorderdetailNo!}",
+		"sysorderdetailTitle":"${row.sysorderdetailTitle!}",
+		"sysorderdetailContent":"${row.sysorderdetailContent!}",
+		"sysorderdetailStatus":"${row.sysorderdetailStatus?string("是","否")}",
+		"sysorderdetailCreatetime":"${row.sysorderdetailCreatetime!}",
+		"sysorderdetailSolvetime":"${row.sysorderdetailSolvetime!}",
+		"sysorderdetailLasttime":"${row.sysorderdetailLasttime!}",
+		"sysorderdetailReplytime":"${row.sysorderdetailReplytime!}"
+	}
+	<#if row_has_next>,</#if>
+</#list>
+]

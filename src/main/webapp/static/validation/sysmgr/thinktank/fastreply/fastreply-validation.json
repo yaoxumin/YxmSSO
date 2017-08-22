@@ -1,0 +1,12 @@
+{
+    "code": 200,
+    "msg": "处理成功",
+    "data": {
+        "fastreplyContent" :[
+            {
+                "type": "requiredstring",
+                "message" : "快捷回复内容不能为空"
+            }
+        ]
+    }
+}

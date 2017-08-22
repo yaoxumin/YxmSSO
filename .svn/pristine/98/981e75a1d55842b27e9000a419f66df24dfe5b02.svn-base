@@ -1,0 +1,16 @@
+<#assign d=JspTaglibs["/WEB-INF/data-tags.tld"]/>
+<@d.listSyscolumnTag />
+[
+<#list rows as row>
+	{
+		"syscolumnId":"${row.syscolumnId!}",
+		"syscolumnName":"${row.syscolumnName!}",
+		"syscolumnDescription":"${row.syscolumnDescription!}",
+		"syscolumnUrl":"${row.syscolumnUrl!}",
+		"syscolumnOrderby":"${row.syscolumnOrderby!}",
+		"syscolumnIcon":"${row.syscolumnIcon!}",
+		"syscolumnStatus":"${row.syscolumnStatus?string("是","否")}"
+	}
+	<#if row_has_next>,</#if>
+</#list>
+]

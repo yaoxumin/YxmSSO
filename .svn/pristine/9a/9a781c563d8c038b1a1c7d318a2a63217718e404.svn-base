@@ -1,0 +1,216 @@
+package com.yxm.sso.service.impl;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.stereotype.Service;
+
+import com.yxm.sso.context.AppContext;
+import com.yxm.sso.context.UrlPage;
+import com.yxm.sso.domain.Application;
+import com.yxm.sso.domain.Person;
+import com.yxm.sso.domain.vo.TokenVo;
+import com.yxm.sso.domain.vo.UserVo;
+import com.yxm.sso.mapper.PersonMapper;
+import com.yxm.sso.service.ApplicationService;
+import com.yxm.sso.service.PersonService;
+import com.yxm.sso.util.SpringContextUtils;
+import com.yxm.sso.util.StringUtils;
+import com.yxm.sso.util.result.DealResult;
+import com.yxm.sso.util.result.DealStatus;
+import com.yxm.sso.util.service.TokenServiceImpl;
+
+@Service
+public class PersonServiceImpl implements PersonService {
+	Log logger = LogFactory.getLog(PersonServiceImpl.class);
+
+	@Resource
+	PersonMapper personMapper;
+
+	@Override
+	public int addRecord(Person p) {
+		return personMapper.addRecord(p);
+	}
+	
+	@Override
+	public void deleteRecord(String id) {
+		personMapper.deleteRecord(id);
+	}
+	
+	@Override
+	public List<Person> findListBySql(String sql) {
+		return personMapper.findListBySql(sql);
+	}
+
+	@Override
+	public int saveOrUpdate(Person p) {
+		return personMapper.saveOrUpdate(p);
+	}
+
+	@Override
+	public Person getDetail(String id) {
+		return personMapper.getDetail(id);
+	}
+
+	@Override
+	public Person queryBySql(String sql) {
+		return personMapper.queryBySql(sql);
+	}
+
+	@Override
+	public List<Person> listAll() {
+		return personMapper.listAll();
+	}
+
+	/*
+	 * <p>Description:用户做出登出处理的时候</p>
+	 * 
+	 * @author:姚旭民
+	 * 
+	 * @data:2017-7-20 下午4:38:24
+	 */
+	@Override
+	public DealResult loginOut(HttpSession session, HttpServletRequest request) {
+		DealResult result = null;
+		// 【1】检验是否是授权的网站
+		if (ApplicationServiceImpl.allowedApplication(request)) {
+			String token = request.getParameter(AppContext.KEY_TOKEN);
+			UserVo vo = (UserVo) session
+					.getAttribute(AppContext.KEY_SESSION_USER);
+			try {
+				if (vo != null && vo.getToken() != null && token == null) {
+					token = vo.getToken();
+				}
+				// 【2】清除session里面保存的数据
+				if (vo != null)
+					session.removeAttribute(AppContext.KEY_SESSION_USER);
+				// 【3】清除redis里面缓存的token
+				// 只要不报错，就是删除成功了
+				TokenServiceImpl.delToken(request, token);
+				// 打包成功处理结果
+				result = DealResult.defaultSuccess();
+			} catch (Exception e) {
+				// 打包时报处理结果
+				logger.info("PersonServiceImpl类的loginOut方法出错");
+			}
+		} else {
+			result = DealResult.defaultError();
+		}
+		return result;
+	}
+
+	/**
+	 * <p>说明:验证登陆者信息,用户已经到SSO认证服务器上登陆的了 </p>
+	 * @author:姚旭民
+	 * @date:2017-7-13 下午4:09:16
+	 */
+	@Override
+	public DealResult verifyLogin(HttpSession session,
+			HttpServletRequest request, Person person) {
+		String token = request.getParameter(AppContext.KEY_TOKEN);
+		// flag,用来标示是否登陆授权成功
+		boolean flag = false;
+		// 回调地址
+		String url = null;
+		// 查询结果
+		Person tempPerson = null;
+		// 默认为失败的操作，直接返回了登陆页面
+		DealResult result = new DealResult();
+		result.setTokenInfo(DealStatus.LOGIN_ERROR.getCode(),
+				DealStatus.LOGIN_ERROR.getMsg(), UrlPage.PAGE_LOGIN);
+		result.setUrl(UrlPage.PAGE_LOGIN);
+		// 进入条件，1、person为null(用户没有在SSO输入登陆)，
+		// 2、session里面没有存在登陆痕迹，
+		// 3、用户没有传递token过来，这才开始验证登陆
+		if (StringUtils.isNotBlank(person) && StringUtils.isBlank(token)
+				&& !verifyExistToken(session)) {
+			String tempToken;// 进入了这一步代表没有token的存在
+			result = new DealResult();// 操作的结果集合
+			// 【1】不存在token，查询账号，验证是否存在
+			tempPerson = personMapper.verifyPerson(person);
+			// 【2】如果查询得到账号，那么证明存在，为其生成token
+			if (tempPerson != null) {// 账号验证正确，生成token，然后根据返回地址带上token重定向
+				tempPerson.setPassword(null);// 抹除掉密码
+				// 【3】通过查询得到的用户资料来差查对应的application对象，然后返回对应的token消息
+				ApplicationService applicationService = (ApplicationService) SpringContextUtils
+						.getBean(ApplicationService.class);
+				// 通过applicationId 来获取信息
+				Application app = applicationService
+						.selectByPrimaryKey(tempPerson.getApplicationid());
+				url = app.getAccepttokenurl();
+
+				// 【4】生成加密过后的token，id，用户名字，用户类型
+				token = TokenServiceImpl.encodeAndSaveToken(tempPerson.getId(),
+						tempPerson.getUsername(), tempPerson, app);
+				UserVo userVo = new UserVo(token, url, tempPerson, app);
+				// 【5】将登陆痕迹放置到session里面
+				session.setAttribute(AppContext.KEY_SESSION_USER, userVo);
+				// 【6】设置处理结果
+				flag = true;// 授权成功
+			}
+		}
+
+		else {// 判断规则，优先是检查是否有token传递过来，次之才是判断是否存在登陆痕迹
+				// 这个代表用户没有在SSO登陆，也没有登陆痕迹，但是有token
+				// 这种场景就是用户进行了单点登录，这时候的验证是
+				// 1、用户合法性，检验是否是授权域名
+				// 2、检验token合法性
+				// 不必要为用户保留登陆痕迹，因为不会被记住
+				// 这时候不能设置回调地址，因为已经不合适使用了，只需要返回验证成功就行
+			if (StringUtils.isNotBlank(token)) {
+				// 是存在的有效验证
+				TokenVo vo = TokenServiceImpl.getTokenVo(request, token);
+				if (vo != null) {
+					url = vo.getAccepttokenurl();
+					result.setCode(DealStatus.SUCCESS.getCode());
+					result.setMsg("有效token");
+					flag = true;
+				}
+				// 是不存在的无效验证
+				else {
+					result.setBackUrl(null);
+					result.setMsg("您没有被授权使用单点登录或者token失效，请重新登陆");
+				}
+			}
+			// 存在登陆痕迹的
+			else if (verifyExistToken(session)) {
+				UserVo userVo = (UserVo) session
+						.getAttribute(AppContext.KEY_SESSION_USER);
+				if (userVo != null
+						&& StringUtils.isNotBlank(userVo.getBackUrl(),
+								userVo.getToken())) {
+					url = userVo.getBackUrl();
+					token = userVo.getToken();
+					flag = true;
+				}
+			}
+
+		}
+
+		if (flag) {
+			// 如果是验证通过了的，直接改写url
+			url = "redirect:" + url + "?token=" + token;// 请求重定向到发起请求的位置
+			result.setTokenInfo(DealStatus.SUCCESS.getCode(),
+					DealStatus.SUCCESS.getMsg(), url);
+		}
+		return result;
+	}
+
+	/*
+	 * <p>说明:检查类型里面是否存在了登陆成功的包装类型</p>
+	 * 
+	 * @author:姚旭民
+	 * 
+	 * @data:2017-8-9 下午5:27:33
+	 */
+	@Override
+	public boolean verifyExistToken(HttpSession session) {
+		return session.getAttribute(AppContext.KEY_SESSION_USER) != null ? true
+				: false;
+	}
+}

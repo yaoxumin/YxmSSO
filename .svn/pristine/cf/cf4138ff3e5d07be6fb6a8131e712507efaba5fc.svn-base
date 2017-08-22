@@ -1,0 +1,51 @@
+package com.yxm.sso.web.controller;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.xiaoleilu.hutool.util.StrUtil;
+import com.yxm.sso.context.AppContext;
+import com.yxm.sso.service.PersonService;
+import com.yxm.sso.util.domain.ApiResult;
+import com.yxm.sso.util.domain.DealResult;
+import com.yxm.sso.util.service.TokenServiceImpl;
+
+/*
+ *<p>Description:token对外接口</p>
+ *@author:姚旭民
+ *@data:2017-7-23 下午5:09:42
+ */
+@RequestMapping("/tokenApi")
+@Controller
+public class TokenApiController {
+	Log logger= LogFactory.getLog(TokenApiController.class);
+	@Resource
+	PersonService personService;
+
+	@ResponseBody
+	@RequestMapping("/verifyToken")
+	public DealResult verifyToken(HttpSession session,
+			HttpServletRequest request) {
+		String token = request.getParameter(AppContext.KEY_TOKEN);
+//		DealResult result = TokenServiceImpl.verifyToken(session, request, token);
+		return null;
+	}
+	
+	@ResponseBody
+	@RequestMapping("/getUserInfo")
+	public ApiResult getUserInfo(HttpSession session, HttpServletRequest request) {
+		ApiResult result = null;
+		String token = request.getParameter(AppContext.KEY_TOKEN);//获取传输中的token
+		if (StrUtil.isNotBlank(token)) {
+			result = TokenServiceImpl.getUserInfo(request, token);
+		}
+		return result;
+	}
+}

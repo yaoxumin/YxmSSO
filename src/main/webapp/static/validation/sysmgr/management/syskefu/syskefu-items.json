@@ -1,0 +1,26 @@
+<#include "/static/common/items_head.html" />
+<@d.listSyskefuTag page="${_page}" pagesize="${_pagesize}" />
+[
+<#list rows as row>
+	{
+		"syskefuId":"${row.syskefuId!}",
+		"syskefuUsername":"${row.syskefuUsername!}",
+		"syskefuIsstate":"${row.syskefuIsstate?string("是","否")}",
+		"syskefuWorkid":"${row.syskefuWorkid!}",
+		"syskefuPhone":"${row.syskefuPhone!}",
+		"syskefuPhoto":"${row.syskefuPhoto!}",
+		"syskefuScore":"${row.syskefuScore!}",
+		"syskefuScorenumber":"${row.syskefuScorenumber!}",
+		"syskefuTreatnumber":"${row.syskefuTreatnumber!}",
+		"syskefuMaxoforder":"${row.syskefuMaxoforder!}",
+		"syskefuHasordernumber":"${row.syskefuHasordernumber!}",
+		"syskefuIsrobot":"${row.syskefuIsrobot?string("是","否")}",
+		"syskefuCreatetime":"${row.syskefuCreatetime!}",
+		"syskefuUpdatetime":"${row.syskefuUpdatetime!}",
+		"sysoperator":"${row.sysoperator!}",
+		"sysstaffid":"${row.sysstaffid!}",
+		"syskefuLevel":"${row.syskefuLevel?string("是","否")}"
+	}
+	<#if row_has_next>,</#if>
+</#list>
+]

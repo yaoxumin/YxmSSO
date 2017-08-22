@@ -1,0 +1,10 @@
+<#include "/static/common/items_head.html" />
+<@d.listSysroleSyscolumnTag page="${_page}" pagesize="${_pagesize}" />
+[
+<#list rows as row>
+	{
+		"sysrolecolumnId":"${row.sysrolecolumnId!}"
+	}
+	<#if row_has_next>,</#if>
+</#list>
+]

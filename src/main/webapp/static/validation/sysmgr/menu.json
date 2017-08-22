@@ -1,0 +1,26 @@
+<#include "/static/common/items_head.html" />
+<@d.listSyscolumnTag />
+[
+<#list rows as row>
+    {
+        "id":${row.syscolumnId!},
+        "name":"${row.syscolumnName!}",
+        "url":"${row.syscolumnUrl!}",
+        "icon":"${row.syscolumnIcon!}"
+        <#if row.syscolumns?size gt 0>
+         , "children":[
+            <#list row.syscolumns as r>
+                {
+                    "id":"${r.syscolumnId!}",
+                    "name":"${r.syscolumnName!}",
+                    "url":"${r.syscolumnUrl!}",
+                    "icon":"${r.syscolumnIcon!}"
+                }
+                <#if r_has_next>,</#if>
+            </#list>
+        ]
+        </#if>
+    }
+    <#if row_has_next>,</#if>
+</#list>
+]

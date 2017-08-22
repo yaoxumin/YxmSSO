@@ -1,0 +1,90 @@
+{
+	"code": 200,
+    "msg": "处理成功",
+    "data": {
+	    "settingSessionidletime" : [
+	        {
+	            "type" : "required",
+	            "message" : "会话闲置时间不能为空"
+	        },
+	        {
+	        	"type" : "int",
+	        	"min" : 1,
+	        	"max" : 720,
+	        	"message" : "请输入1-720分钟以内的整数"
+	        }
+	    ],
+		"settingOvertimetip": [
+			{
+				"type" : "required",
+	            "message" : "超时结束提示语不能为空"
+			}
+		],
+		"settingInvitationmsg": [
+			{
+				"type" : "required",
+	            "message" : "评价邀请语不能为空"
+			}
+		],
+		"settingThanksmsg": [
+			{
+				"type" : "required",
+	            "message" : "评价感谢语不能为空"
+			}
+		],
+		"settingReceive": [
+			{
+				"type" : "required",
+	            "message" : "请设置客服接待设置"
+			}
+		],
+		"settingIstransfer": [
+			{
+				"type" : "required",
+	            "message" : "请设置会话转接设置"
+			}
+		],
+		"settingIsavatar": [
+			{
+				"type" : "required",
+	            "message" : "请选择是否客服设置头像功能"
+			}
+		],
+		"settingIsfile": [
+			{
+				"type" : "required",
+	            "message" : "请选择是否开启发送文件功能"
+			}
+		],
+		"settingIsprintscreen": [
+			{
+				"type" : "required",
+	            "message" : "请选择是否开启截屏/截图功能"
+			}
+		],
+		"settingIsemotion": [
+			{
+				"type" : "required",
+	            "message" : "请选择是否开启发送表情功能"
+			}
+		],
+		"settingIsvoice": [
+			{
+				"type" : "required",
+	            "message" : "请选择是否开启发送语音功能"
+			}
+		],
+		"settingIsmessage": [
+			{
+				"type" : "required",
+	            "message" : "请选择是否开启预知访客消息"
+			}
+		],
+		"settingIssensitive": [
+			{
+				"type" : "required",
+	            "message" : "请选择是否开启敏感词感知功能"
+			}
+		]
+	}
+}

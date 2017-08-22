@@ -1,0 +1,184 @@
+package com.yxm.sso.service.impl;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.stereotype.Service;
+
+import com.xiaoleilu.hutool.util.PageUtil;
+import com.yxm.sso.context.AppContext;
+import com.yxm.sso.context.UrlPage;
+import com.yxm.sso.domain.Application;
+import com.yxm.sso.domain.Person;
+import com.yxm.sso.domain.vo.UserVo;
+import com.yxm.sso.mapper.PersonMapper;
+import com.yxm.sso.service.ApplicationService;
+import com.yxm.sso.service.PersonService;
+import com.yxm.sso.util.SpringContextUtils;
+import com.yxm.sso.util.StringUtils;
+import com.yxm.sso.util.result.DealResult;
+import com.yxm.sso.util.result.DealStatus;
+import com.yxm.sso.util.service.TokenServiceImpl;
+
+@Service
+public class PersonServiceImpl implements PersonService {
+	Log logger = LogFactory.getLog(PersonServiceImpl.class);
+
+	@Resource
+	PersonMapper personMapper;
+
+	@Override
+	public int addRecord(Person p) {
+		return personMapper.addRecord(p);
+	}
+
+	@Override
+	public int saveOrUpdate(Person p) {
+		return personMapper.saveOrUpdate(p);
+	}
+
+	@Override
+	public Person getDetail(String id) {
+		return personMapper.getDetail(id);
+	}
+
+	@Override
+	public void deleteRecord(String id) {
+		personMapper.deleteRecord(id);
+	}
+
+	@Override
+	public Person queryBySql(String sql) {
+		return personMapper.queryBySql(sql);
+	}
+
+	@Override
+	public List<Person> findListBySql(String sql) {
+		return personMapper.findListBySql(sql);
+	}
+
+	@Override
+	public List<Person> listAll() {
+		return personMapper.listAll();
+	}
+
+	/**
+	 * <p>
+	 * 说明:验证登陆者信息,用户已经到SSO认证服务器上登陆的了
+	 * </p>
+	 * 
+	 * @author:姚旭民
+	 * @date:2017-7-13 下午4:09:16
+	 */
+	@Override
+	public DealResult verifyLogin(HttpSession session,
+			HttpServletRequest request, String username) {
+		DealResult result = null;
+		if (StringUtils.isNotBlank(username)) {
+			String token;
+			result = new DealResult();
+			Person person = new Person();
+			person.setUsername(username);
+			// 【1】不存在token，查询账号，验证是否存在
+			Person tempPerson = personMapper.verifyPerson(person);
+			// 【2】如果查询得到账号，那么证明存在，为其生成token
+			if (tempPerson != null) {// 账号验证正确，生成token，然后根据返回地址带上token重定向
+				// 【3】通过查询得到的用户资料来差查对应的application对象，然后返回对应的token消息
+				ApplicationService applicationService = (ApplicationService) SpringContextUtils
+						.getBean(ApplicationService.class);
+				// 通过applicationId 来获取信息
+				Application tempApp = applicationService
+						.selectByPrimaryKey(tempPerson.getApplicationid());
+				String url = tempApp.getAccepttokenurl();
+
+				if (!verifyExistToken(session)) {
+					// 【4】生成加密过后的token，id，用户名字，用户类型
+					token = TokenServiceImpl.encodeAndSaveToken(
+							tempPerson.getId(), tempPerson.getUsername(),
+							"Person", tempPerson);
+					String tokenDecode = TokenServiceImpl.decodeOfToken(token);
+					// 【5】设置处理结果
+					UserVo userVo = new UserVo(token, tempPerson);// token包装类型
+					// 如果是验证通过了的，直接改写url
+					url = "redirect:" + url + "?token=" + token;// 请求重定向到发起请求的位置
+					result.setTokenInfo(DealStatus.SUCCESS.getCode(),
+							DealStatus.SUCCESS.getMsg(), url, true);
+				} else {// 已经生成了token过的
+					token = ((UserVo) session
+							.getAttribute(AppContext.KEY_SESSION_USER))
+							.getToken();
+					UserVo userVo = new UserVo(token, tempPerson);// token包装类型
+					url = "redirect:" + url + "?" + token;// 请求重定向到发起请求的位置
+					System.out.println("url的内容为：" + url);
+					result.setTokenInfo(DealStatus.SUCCESS.getCode(),
+							DealStatus.SUCCESS.getMsg(), url, true);
+					result.setToken(token);
+				}
+			} else {// 账号信息验证失败，重新回到登录页面
+				result.setTokenInfo(DealStatus.LOGIN_ERROR.getCode(),
+						DealStatus.LOGIN_ERROR.getMsg(), UrlPage.PAGE_LOGIN, false);
+				result.setUrl(UrlPage.PAGE_LOGIN);
+			}
+		} else {// 账号信息验证失败，重新回到登录页面
+			result.setTokenInfo(DealStatus.LOGIN_ERROR.getCode(),
+					DealStatus.LOGIN_ERROR.getMsg(), UrlPage.PAGE_LOGIN, false);
+			result.setUrl(UrlPage.PAGE_LOGIN);
+		}
+		return result;
+	}
+
+	/*
+	 * <p>Description:用户做出登出处理的时候</p>
+	 * 
+	 * @author:姚旭民
+	 * 
+	 * @data:2017-7-20 下午4:38:24
+	 */
+	@Override
+	public DealResult loginOut(HttpSession session, HttpServletRequest request,
+			String token) {
+		DealResult result = null;
+		// 【1】检验是否是授权的网站
+		if (ApplicationServiceImpl.allowedApplication(request)) {
+			try {
+				// 【2】清除session里面保存的数据
+				session.removeAttribute(AppContext.KEY_SESSION_USER);
+				// 【3】清除redis里面缓存的token
+				// 只要不报错，就是删除成功了
+				TokenServiceImpl.delToken(request, token);
+				// 打包成功处理结果
+				result = DealResult.defaultSuccess();
+			} catch (Exception e) {
+				// 打包时报处理结果
+				logger.info("PersonServiceImpl类的loginOut方法出错");
+			}
+		} else {
+			result = DealResult.defaultError();
+		}
+		return result;
+	}
+
+	@Override
+	public DealResult getInfoByToken(HttpSession session,
+			HttpServletRequest request, String token) {
+		return null;
+	}
+
+	/*
+	 * <p>说明:检查类型里面是否存在了登陆成功的包装类型</p>
+	 * 
+	 * @author:姚旭民
+	 * 
+	 * @data:2017-8-9 下午5:27:33
+	 */
+	@Override
+	public boolean verifyExistToken(HttpSession session) {
+		return session.getAttribute(AppContext.KEY_SESSION_USER) != null ? true
+				: false;
+	}
+}

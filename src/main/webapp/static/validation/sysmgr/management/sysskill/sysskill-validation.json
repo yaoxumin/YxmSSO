@@ -1,0 +1,25 @@
+{
+    "code": 200,
+    "msg": "处理成功",
+    "data": {
+        "sysskillName" :[
+            {
+                "type": "requiredstring",
+                "trim": true,
+                "message" : "名称不能为空"
+            },
+            {
+                "type" : "regex",
+                "expression" : "^[\u4E00-\u9FA5A-Za-z0-9]+$",
+                "message" : "格式有误,不能输入数字或符号"
+            }
+        ],
+        "sysskillDescription" :[
+            {
+                "type": "requiredstring",
+                "trim": true,
+                "message" : "回答不能为空"
+            }
+        ]
+    }
+}

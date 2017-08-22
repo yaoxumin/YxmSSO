@@ -1,0 +1,15 @@
+<#include "/static/common/items_head.html" />
+<@d.listSysprivilegeTag page="${_page}" pagesize="${_pagesize}" />
+[
+<#list rows as row>
+	{
+		"sysprivilegeId":"${row.sysprivilegeId!}",
+		"sysprivilegeName":"${row.sysprivilegeName!}",
+		"sysprivilegeUrl":"${row.sysprivilegeUrl!}",
+		"sysprivilegeIcon":"${row.sysprivilegeIcon!}",
+		"sysprivilegeDescription":"${row.sysprivilegeDescription!}",
+		"sysprivilegeStatus":"${row.sysprivilegeStatus?string("是","否")}"
+	}
+	<#if row_has_next>,</#if>
+</#list>
+]

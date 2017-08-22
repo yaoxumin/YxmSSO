@@ -1,0 +1,12 @@
+<#assign d=JspTaglibs["/WEB-INF/data-tags.tld"]/>
+<#assign _pagesize=RequestParameters.pagesize!'20'/>
+<#assign _keywords=RequestParameters.keywords!''/>
+<#assign _desc=RequestParameters.desc!'true' />
+<#if _desc == 'false'>
+    <#assign _order = '' />
+<#else>
+    <#assign _order = 'DESC' />
+</#if>
+<#if Session['admin']??>
+    <#assign companyid = Session['admin']['companyid'] />
+</#if>

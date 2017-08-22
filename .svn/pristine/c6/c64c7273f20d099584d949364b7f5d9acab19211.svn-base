@@ -1,0 +1,40 @@
+{
+    "code": 200,
+    "msg": "处理成功",
+    "data": {
+        "privilegeName":[
+            {
+                "type": "requiredstring",
+                "message" : "名称不能为空"
+            },
+            {
+                "type" : "regex",
+                "expression" : "^[\u4E00-\u9FA5A-Za-z0-9]+$",
+                "message" : "格式有误,不能输入数字或符号"
+            }
+        ],
+        "privilegeDescription": [
+            {
+                "type": "requiredstring",
+                "message" : "描述不能为空"
+            }
+        ],
+        "privilegeUrl": [
+            {
+                "type" : "required",
+                "message" : "链接不能为空"
+            },
+            {
+                "type" : "regex",
+                "expression" : "\\/([a-zA-Z]{1,10})\\-([a-zA-Z]{1,10})|\\/([a-zA-Z]{1,10})|\\/#",
+                "message" : "请输入正确的链接 "
+            }
+        ],
+        "privilegeRootNode": [
+            {
+                "type" : "required",
+                "message" : "父节点不能为空"
+            }
+        ]
+    }
+}
