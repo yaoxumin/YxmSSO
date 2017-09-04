@@ -1,9 +1,0 @@
-package com.yxm.sso.test;
-
-public class Test {
-	public static void main(String[] args) {
-		String url = "http://test.com/acceptToken.actionagfwfds7&afjskhj";
-		String[] str = url.split("&");
-		System.out.println(str[0]+";"+str[1]);
-	}
-}

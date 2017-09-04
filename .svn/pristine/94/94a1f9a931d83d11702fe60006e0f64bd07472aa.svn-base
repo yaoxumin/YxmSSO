@@ -1,5 +1,0 @@
-package com.yxm.sso.context;
-
-public class UrlPage {
-	public final static String PAGE_LOGIN = "login";
-}
